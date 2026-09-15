@@ -1,0 +1,41 @@
+{{ define "contact" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+<section class="contact">
+    <h2>Contact Us</h2>
+    <p>
+        We would love to hear from you! Whether you want to volunteer, donate, 
+        or simply learn more about our mission, feel free to reach out.
+    </p>
+
+    <div class="contact-info">
+        <div class="info-block">
+            <h4>Address</h4>
+            <p>Ek Nayi Pahal NGO<br>
+            123 Community Lane,<br>
+            Dadri, Uttar Pradesh, India</p>
+        </div>
+        <div class="info-block">
+            <h4>Email</h4>
+            <p>info@eknayipahal.org</p>
+        </div>
+        <div class="info-block">
+            <h4>Phone</h4>
+            <p>+91-1234567890</p>
+        </div>
+    </div>
+
+    <div class="contact-form">
+        <h3>Send Us a Message</h3>
+        <form action="/contact" method="post">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,142 @@
+.hero-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.intro {
+    text-align: center;
+    padding: 2em;
+}
+
+.mission {
+    background-color: #fff3e0;
+    padding: 2em;
+    text-align: center;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 300px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 1em;
+    padding: 1em;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.cta {
+    background-color: #f57c00;
+    color: white;
+    text-align: center;
+    padding: 2em;
+}
+
+.btn {
+    background-color: #388e3c;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.btn.donate {
+    background-color: #d32f2f;
+}
+
+header {
+    background-color: #f57c00;
+    color: white;
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    margin-right: 15px;
+}
+
+.logo-text h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.logo-text p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #ffe0b2;
+}
+
+nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact {
+    padding: 2em;
+    text-align: center;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 2em 0;
+}
+
+.info-block {
+    width: 250px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 1em;
+    padding: 1em;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 0.5em 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-form button {
+    background-color: #388e3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contact-form button:hover {
+    background-color: #2e7d32;
+}

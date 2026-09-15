@@ -1,0 +1,40 @@
+{{ define "home" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+
+<section class="intro">
+    <img src="/static/images/banner.jpg" alt="Children Smiling" class="hero-img">
+    <h2>Giving Wings to Dreams</h2>
+    <p>Ek Nayi Pahal is dedicated to bringing positive change through education, healthcare, and women empowerment.</p>
+</section>
+
+<section class="mission">
+    <h3>Our Mission</h3>
+    <div class="cards">
+        <div class="card">
+            <img src="/static/images/education.jpg" alt="Education">
+            <h4>Education</h4>
+            <p>Providing quality education to children so they can build a brighter future.</p>
+        </div>
+        <div class="card">
+            <img src="/static/images/healthcare.jpg" alt="Healthcare">
+            <h4>Healthcare</h4>
+            <p>Organizing health camps and awareness programs for a healthier society.</p>
+        </div>
+        <div class="card">
+            <img src="/static/images/women.jpg" alt="Women Empowerment">
+            <h4>Women Empowerment</h4>
+            <p>Helping women become self-reliant and aware of their rights.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <h3>Join Our Mission</h3>
+    <p>Your support helps us make a real difference.</p>
+    <a href="/join" class="btn">Join Us</a>
+    <a href="/donate" class="btn donate">Donate Now</a>
+</section>
+{{ end }}
