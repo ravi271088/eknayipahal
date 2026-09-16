@@ -140,3 +140,61 @@ nav a {
 .contact-form button:hover {
     background-color: #2e7d32;
 }
+
+.about {
+    padding: 2em;
+    text-align: center;
+    background-color: #f9fbe7; /* soft background for distinction */
+}
+
+.about h2 {
+    color: #f57c00;
+    margin-bottom: 1em;
+}
+
+.about p {
+    max-width: 800px;
+    margin: 0 auto 2em;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.about-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.about-cards .card {
+    width: 300px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 1em;
+    padding: 1.5em;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-cards .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.about-cards .card img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 1em;
+}
+
+.about-cards .card h4 {
+    color: #388e3c;
+    margin-bottom: 0.5em;
+}
+
+footer {
+    background-color: #f57c00; /* optional: matches your header */
+    color: white;
+    text-align: center;       /* centers the text */
+    padding: 1em;
+}
