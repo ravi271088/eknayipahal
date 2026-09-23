@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math"
+	"net/http"
 	"os"
 	"strconv"
 	"text/template"
@@ -45,7 +45,7 @@ func saveImages(images []GalleryImage) error {
 }
 
 func main() {
-	// Initialize templates
+	// Initialize templates using text/template
 	var err error
 	tmpl, err = template.ParseGlob("templates/*.html")
 	if err != nil {
@@ -56,24 +56,30 @@ func main() {
 
 	r.Static("/static", "./static")
 
+	// Define the render function as a variable to avoid compilation issues
+	render := func(c *gin.Context, name string, data gin.H) {
+		err := tmpl.ExecuteTemplate(c.Writer, name, data)
+		if err != nil {
+			log.Printf("Template error: %v", err)
+			http.Error(c.Writer, "Internal Server Error", http.StatusInternalServerError)
+		}
+	}
+
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "layout", gin.H{
+		render(c, "home", gin.H{
 			"title": "Home - Ek Nayi Pahal NGO",
-			"content": "home_content",
 		})
 	})
 
 	r.GET("/about", func(c *gin.Context) {
-		c.HTML(200, "layout", gin.H{
+		render(c, "about", gin.H{
 			"title": "About Us - Ek Nayi Pahal NGO",
-			"content": "about_content",
 		})
 	})
 
 	r.GET("/contact", func(c *gin.Context) {
-		c.HTML(200, "layout", gin.H{
+		render(c, "contact", gin.H{
 			"title": "Contact Us - Ek Nayi Pahal NGO",
-			"content": "contact_content",
 		})
 	})
 
@@ -105,9 +111,8 @@ func main() {
 		paginatedImages := images[start:end]
 		totalPages := int(math.Ceil(float64(totalImages) / float64(pageSize)))
 
-		c.HTML(200, "layout", gin.H{
+		render(c, "gallery", gin.H{
 			"title":       "Gallery - Ek Nayi Pahal NGO",
-			"content":     "gallery_content",
 			"Images":      paginatedImages,
 			"CurrentPage":  page,
 			"TotalPages":   totalPages,
@@ -135,9 +140,8 @@ func main() {
 				return
 			}
 
-			c.HTML(200, "layout", gin.H{
+			render(c, "admin", gin.H{
 				"title":   "Admin Panel - Ek Nayi Pahal NGO",
-				"content": "content",
 				"Images":  images,
 			})
 		})
@@ -195,52 +199,5 @@ func main() {
 		port = "8080"
 	}
 
-	// This is critical: Gin's c.HTML uses the HTMLRender interface.
-	// We need to tell Gin how to use our standard text/template.
-	r.SetHTMLTemplate(htmlRender{tmpl: tmpl})
-
 	r.Run(":" + port)
 }
-
-// htmlRender implements gin.HTMLRender
-type htmlRender struct {
-	tmpl *template.Template
-}
-
-func (h htmlRender) Render(w http.ResponseWriter, name string, data interface{}) {
-	// Since we are using a layout, we always execute the "layout" template
-	// but we must ensure the 'content' block in layout.html is filled.
-	// We do this by cloning the template and defining a new 'content' block
-	// that points to the specific page content.
-
-	// The data passed to layout must contain the 'content' name.
-	// We assume the 'data' is a gin.H (map[string]interface{})
-	dataMap, ok := data.(gin.H)
-	if !ok {
-		// If it's not a map, we can't dynamically set the content
-		h.tmpl.ExecuteTemplate(w, name, data)
-		return
-	}
-
-	contentName, ok := dataMap["content"].(string)
-	if !ok {
-		h.tmpl.ExecuteTemplate(w, name, data)
-		return
-	}
-
-	t, err := h.tmpl.Clone()
-	if err != nil {
-		http.Error(w, "Template Clone Error", 500)
-		return
-	}
-
-	// Map the layout's "content" block to the actual page content
-	t.New("content").Parse(fmt.Sprintf(`{{ template "%s" . }}`, contentName))
-
-	err = t.ExecuteTemplate(w, name, data)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-}
-
-// Need to add "net/http" to imports
