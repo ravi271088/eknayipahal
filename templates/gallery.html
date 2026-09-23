@@ -5,36 +5,40 @@
     <p>Capturing the moments of change and hope we create together.</p>
 
     <div class="cards">
+        {{ range .Images }}
         <div class="card">
-            <img src="https://picsum.photos/id/1005/400/300" alt="Education Program">
-            <h4>Education Program</h4>
-            <p>Children participating in our weekly literacy workshops.</p>
+            <img src="{{ .URL }}" alt="{{ .Title }}">
+            <h4>{{ .Title }}</h4>
+            <p>{{ .Description }}</p>
         </div>
-        <div class="card">
-            <img src="https://picsum.photos/id/1011/400/300" alt="Health Camp">
-            <h4>Health Camp</h4>
-            <p>Free medical checkups provided to the rural community.</p>
-        </div>
-        <div class="card">
-            <img src="https://picsum.photos/id/1025/400/300" alt="Women Empowerment">
-            <h4>Women Empowerment</h4>
-            <p>Skill development training session for local women.</p>
-        </div>
-        <div class="card">
-            <img src="https://picsum.photos/id/1031/400/300" alt="Community Outreach">
-            <h4>Community Outreach</h4>
-            <p>Engaging with families to promote hygiene and health.</p>
-        </div>
-        <div class="card">
-            <img src="https://picsum.photos/id/1035/400/300" alt="Youth Mentorship">
-            <h4>Youth Mentorship</h4>
-            <p>Guiding students toward higher education opportunities.</p>
-        </div>
-        <div class="card">
-            <img src="https://picsum.photos/id/1045/400/300" alt="Volunteer Day">
-            <h4>Volunteer Day</h4>
-            <p>Our dedicated volunteers working on the ground.</p>
-        </div>
+        {{ end }}
+    </div>
+
+    <div class="pagination">
+        {{ if gt .CurrentPage 1 }}
+        <a href="/gallery?page={{ .PrevPage }}" class="btn">Previous</a>
+        {{ end }}
+
+        <span class="page-info">Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
+
+        {{ if lt .CurrentPage .TotalPages }}
+        <a href="/gallery?page={{ .NextPage }}" class="btn">Next</a>
+        {{ end }}
     </div>
 </section>
+
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+    .page-info {
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+</style>
 {{ end }}

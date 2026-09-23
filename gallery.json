@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "url": "https://images.unsplash.com/photo-1497633762265-9d179a990a66?auto=format&fit=crop&w=400&q=80",
+    "title": "Education Program",
+    "description": "Children participating in our weekly literacy workshops."
+  },
+  {
+    "id": 2,
+    "url": "https://images.unsplash.com/photo-1584515933487-77982497a697?auto=format&fit=crop&w=400&q=80",
+    "title": "Health Camp",
+    "description": "Free medical checkups provided to the rural community."
+  },
+  {
+    "id": 3,
+    "url": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=400&q=80",
+    "title": "Women Empowerment",
+    "description": "Skill development training session for local women."
+  },
+  {
+    "id": 4,
+    "url": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=400&q=80",
+    "title": "Community Outreach",
+    "description": "Engaging with families to promote hygiene and health."
+  },
+  {
+    "id": 5,
+    "url": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=400&q=80",
+    "title": "Youth Mentorship",
+    "description": "Guiding students toward higher education opportunities."
+  },
+  {
+    "id": 6,
+    "url": "https://images.unsplash.com/photo-1559027615-755794776ec3?auto=format&fit=crop&w=400&q=80",
+    "title": "Volunteer Day",
+    "description": "Our dedicated volunteers working on the ground."
+  }
+]
