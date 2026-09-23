@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math"
 	"net/http"
@@ -45,7 +46,6 @@ func saveImages(images []GalleryImage) error {
 }
 
 func main() {
-	// Initialize templates using text/template
 	var err error
 	tmpl, err = template.ParseGlob("templates/*.html")
 	if err != nil {
@@ -56,7 +56,6 @@ func main() {
 
 	r.Static("/static", "./static")
 
-	// Define the render function as a variable to avoid compilation issues
 	render := func(c *gin.Context, name string, data gin.H) {
 		err := tmpl.ExecuteTemplate(c.Writer, name, data)
 		if err != nil {
@@ -151,7 +150,11 @@ func main() {
 			title := c.PostForm("title")
 			description := c.PostForm("description")
 
-			images, _ := loadImages()
+			images, err := loadImages()
+			if err != nil {
+				c.String(500, "Error loading images: %v", err)
+				return
+			}
 			id := 1
 			if len(images) > 0 {
 				id = images[len(images)-1].ID + 1
@@ -173,11 +176,19 @@ func main() {
 			c.Redirect(302, "/admin")
 		})
 
-		adminGroup.POST("/admin/delete", func(c *gin.Context) {
+		adminGroup.POST("/delete", func(c *gin.Context) {
 			idStr := c.PostForm("id")
-			id, _ := strconv.Atoi(idStr)
+			id, err := strconv.Atoi(idStr)
+			if err != nil {
+				c.String(400, "Invalid image ID")
+				return
+			}
 
-			images, _ := loadImages()
+			images, err := loadImages()
+			if err != nil {
+				c.String(500, "Error loading images: %v", err)
+				return
+			}
 			var updatedImages []GalleryImage
 			for _, img := range images {
 				if img.ID != id {
