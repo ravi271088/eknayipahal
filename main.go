@@ -45,7 +45,7 @@ func saveImages(images []GalleryImage) error {
 }
 
 func main() {
-	// Parse all templates at startup
+	// Initialize templates
 	var err error
 	tmpl, err = template.ParseGlob("templates/*.html")
 	if err != nil {
@@ -56,43 +56,24 @@ func main() {
 
 	r.Static("/static", "./static")
 
-	// Common helper to render content inside layout
-	renderPage := func(c *gin.Context, templateName string, title string, data gin.H) {
-		// We use the predefined "layout" template and pass the a map
-		// that tells the layout which "content" block to render.
-		// However, since layout.html uses {{ template "content" . }},
-		// we must ensure the current request's specific content is defined as "content".
-
-		// The most reliable way with ParseGlob is to create a new template,
-		// associate the layout, and then define the specific content.
-		t, err := tmpl.Clone()
-		if err != nil {
-			c.String(500, "Internal Server Error")
-			return
-		}
-
-		// We map the specific page content (e.g., "home_content") to the generic "content" name
-		// so that layout.html's {{ template "content" . }} works.
-		t.New("content").Parse(fmt.Sprintf(`{{ template "%s" . }}`, templateName))
-
-		t.ExecuteTemplate(c.Writer, "layout", data)
-	}
-
 	r.GET("/", func(c *gin.Context) {
-		renderPage(c, "home_content", "Home - Ek Nayi Pahal NGO", gin.H{
+		c.HTML(200, "layout", gin.H{
 			"title": "Home - Ek Nayi Pahal NGO",
+			"content": "home_content",
 		})
 	})
 
 	r.GET("/about", func(c *gin.Context) {
-		renderPage(c, "about_content", "About Us - Ek Nayi Pahal NGO", gin.H{
+		c.HTML(200, "layout", gin.H{
 			"title": "About Us - Ek Nayi Pahal NGO",
+			"content": "about_content",
 		})
 	})
 
 	r.GET("/contact", func(c *gin.Context) {
-		renderPage(c, "contact_content", "Contact Us - Ek Nayi Pahal NGO", gin.H{
+		c.HTML(200, "layout", gin.H{
 			"title": "Contact Us - Ek Nayi Pahal NGO",
+			"content": "contact_content",
 		})
 	})
 
@@ -124,8 +105,9 @@ func main() {
 		paginatedImages := images[start:end]
 		totalPages := int(math.Ceil(float64(totalImages) / float64(pageSize)))
 
-		renderPage(c, "gallery_content", "Gallery - Ek Nayi Pahal NGO", gin.H{
+		c.HTML(200, "layout", gin.H{
 			"title":       "Gallery - Ek Nayi Pahal NGO",
+			"content":     "gallery_content",
 			"Images":      paginatedImages,
 			"CurrentPage":  page,
 			"TotalPages":   totalPages,
@@ -153,8 +135,9 @@ func main() {
 				return
 			}
 
-			renderPage(c, "content", "Admin Panel - Ek Nayi Pahal NGO", gin.H{
+			c.HTML(200, "layout", gin.H{
 				"title":   "Admin Panel - Ek Nayi Pahal NGO",
+				"content": "content",
 				"Images":  images,
 			})
 		})
@@ -212,5 +195,52 @@ func main() {
 		port = "8080"
 	}
 
+	// This is critical: Gin's c.HTML uses the HTMLRender interface.
+	// We need to tell Gin how to use our standard text/template.
+	r.SetHTMLTemplate(htmlRender{tmpl: tmpl})
+
 	r.Run(":" + port)
 }
+
+// htmlRender implements gin.HTMLRender
+type htmlRender struct {
+	tmpl *template.Template
+}
+
+func (h htmlRender) Render(w http.ResponseWriter, name string, data interface{}) {
+	// Since we are using a layout, we always execute the "layout" template
+	// but we must ensure the 'content' block in layout.html is filled.
+	// We do this by cloning the template and defining a new 'content' block
+	// that points to the specific page content.
+
+	// The data passed to layout must contain the 'content' name.
+	// We assume the 'data' is a gin.H (map[string]interface{})
+	dataMap, ok := data.(gin.H)
+	if !ok {
+		// If it's not a map, we can't dynamically set the content
+		h.tmpl.ExecuteTemplate(w, name, data)
+		return
+	}
+
+	contentName, ok := dataMap["content"].(string)
+	if !ok {
+		h.tmpl.ExecuteTemplate(w, name, data)
+		return
+	}
+
+	t, err := h.tmpl.Clone()
+	if err != nil {
+		http.Error(w, "Template Clone Error", 500)
+		return
+	}
+
+	// Map the layout's "content" block to the actual page content
+	t.New("content").Parse(fmt.Sprintf(`{{ template "%s" . }}`, contentName))
+
+	err = t.ExecuteTemplate(w, name, data)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+}
+
+// Need to add "net/http" to imports
