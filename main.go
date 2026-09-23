@@ -43,5 +43,15 @@ func main() {
 		})
 	})
 
+	r.GET("/gallery", func(c *gin.Context) {
+		tmpl := template.Must(template.ParseFiles(
+			"templates/layout.html",
+			"templates/gallery.html",
+		))
+		tmpl.ExecuteTemplate(c.Writer, "gallery", gin.H{
+			"title": "Gallery - Ek Nayi Pahal NGO",
+		})
+	})
+
 	r.Run(":8080")
 }
