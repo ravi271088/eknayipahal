@@ -7,7 +7,7 @@
     <h2>Gallery Management</h2>
 
     <div class="add-image-form">
-        <h3>Add New Image</h3>
+        <h3>Add New Image to Gallery</h3>
         <form action="/admin/add" method="post">
             <div class="form-group">
                 <label>Image URL:</label>
@@ -24,46 +24,13 @@
             <button type="submit" class="btn">Add to Gallery</button>
         </form>
     </div>
-
-    <div class="image-list">
-        <h3>Current Gallery Images</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Preview</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ range .Images }}
-                <tr>
-                    <td><img src="{{ .URL }}" width="50" height="50" style="object-fit: cover;"></td>
-                    <td>{{ .Title }}</td>
-                    <td>{{ .Description }}</td>
-                    <td>
-                        <form action="/admin/delete" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="{{ .ID }}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this image?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {{ end }}
-            </tbody>
-        </table>
-    </div>
 </section>
 
 <style>
-    .admin-panel { max-width: 800px; margin: 0 auto; padding: 20px; }
-    .add-image-form { background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    .admin-panel { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .add-image-form { background: #f4f4f4; padding: 20px; border-radius: 8px; }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; }
     .form-group input, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .btn-danger { background-color: #ff4444; color: white; }
 </style>
 {{ end }}
