@@ -162,7 +162,7 @@ func main() {
 				c.String(500, "Internal Server Error")
 				return
 			}
-			t.New("content").Parse(`{{ template "admin" . }}`)
+							t.New("content").Parse(`{{ template "content" . }}`)
 			t.ExecuteTemplate(c.Writer, "layout", gin.H{
 				"title":   "Admin Panel - Ek Nayi Pahal NGO",
 				"Images":  images,
