@@ -21,7 +21,6 @@ type GalleryImage struct {
 
 var tmpl *template.Template
 
-// Helper functions for JSON persistence
 func loadImages() ([]GalleryImage, error) {
 	data, err := os.ReadFile("gallery.json")
 	if err != nil {
@@ -46,6 +45,7 @@ func saveImages(images []GalleryImage) error {
 }
 
 func main() {
+	// Parse all templates at startup
 	var err error
 	tmpl, err = template.ParseGlob("templates/*.html")
 	if err != nil {
@@ -56,38 +56,42 @@ func main() {
 
 	r.Static("/static", "./static")
 
-	r.GET("/", func(c *gin.Context) {
+	// Common helper to render content inside layout
+	renderPage := func(c *gin.Context, templateName string, title string, data gin.H) {
+		// We use the predefined "layout" template and pass the a map
+		// that tells the layout which "content" block to render.
+		// However, since layout.html uses {{ template "content" . }},
+		// we must ensure the current request's specific content is defined as "content".
+
+		// The most reliable way with ParseGlob is to create a new template,
+		// associate the layout, and then define the specific content.
 		t, err := tmpl.Clone()
 		if err != nil {
 			c.String(500, "Internal Server Error")
 			return
 		}
-		t.New("content").Parse(`{{ template "home_content" . }}`)
-		t.ExecuteTemplate(c.Writer, "layout", gin.H{
+
+		// We map the specific page content (e.g., "home_content") to the generic "content" name
+		// so that layout.html's {{ template "content" . }} works.
+		t.New("content").Parse(fmt.Sprintf(`{{ template "%s" . }}`, templateName))
+
+		t.ExecuteTemplate(c.Writer, "layout", data)
+	}
+
+	r.GET("/", func(c *gin.Context) {
+		renderPage(c, "home_content", "Home - Ek Nayi Pahal NGO", gin.H{
 			"title": "Home - Ek Nayi Pahal NGO",
 		})
 	})
 
 	r.GET("/about", func(c *gin.Context) {
-		t, err := tmpl.Clone()
-		if err != nil {
-			c.String(500, "Internal Server Error")
-			return
-		}
-		t.New("content").Parse(`{{ template "about_content" . }}`)
-		t.ExecuteTemplate(c.Writer, "layout", gin.H{
+		renderPage(c, "about_content", "About Us - Ek Nayi Pahal NGO", gin.H{
 			"title": "About Us - Ek Nayi Pahal NGO",
 		})
 	})
 
 	r.GET("/contact", func(c *gin.Context) {
-		t, err := tmpl.Clone()
-		if err != nil {
-			c.String(500, "Internal Server Error")
-			return
-		}
-		t.New("content").Parse(`{{ template "contact_content" . }}`)
-		t.ExecuteTemplate(c.Writer, "layout", gin.H{
+		renderPage(c, "contact_content", "Contact Us - Ek Nayi Pahal NGO", gin.H{
 			"title": "Contact Us - Ek Nayi Pahal NGO",
 		})
 	})
@@ -120,13 +124,7 @@ func main() {
 		paginatedImages := images[start:end]
 		totalPages := int(math.Ceil(float64(totalImages) / float64(pageSize)))
 
-		t, err := tmpl.Clone()
-		if err != nil {
-			c.String(500, "Internal Server Error")
-			return
-		}
-		t.New("content").Parse(`{{ template "gallery_content" . }}`)
-		t.ExecuteTemplate(c.Writer, "layout", gin.H{
+		renderPage(c, "gallery_content", "Gallery - Ek Nayi Pahal NGO", gin.H{
 			"title":       "Gallery - Ek Nayi Pahal NGO",
 			"Images":      paginatedImages,
 			"CurrentPage":  page,
@@ -136,9 +134,7 @@ func main() {
 		})
 	})
 
-	// Admin Routes
 	adminAuth := func(c *gin.Context) {
-		// Simple Basic Auth for demonstration
 		user, pass, hasAuth := c.Request.BasicAuth()
 		if !hasAuth || user != "admin" || pass != "admin123" {
 			c.Header("WWW-Authenticate", `Basic realm="Admin Panel"`)
@@ -157,13 +153,7 @@ func main() {
 				return
 			}
 
-			t, err := tmpl.Clone()
-			if err != nil {
-				c.String(500, "Internal Server Error")
-				return
-			}
-							t.New("content").Parse(`{{ template "content" . }}`)
-			t.ExecuteTemplate(c.Writer, "layout", gin.H{
+			renderPage(c, "content", "Admin Panel - Ek Nayi Pahal NGO", gin.H{
 				"title":   "Admin Panel - Ek Nayi Pahal NGO",
 				"Images":  images,
 			})
