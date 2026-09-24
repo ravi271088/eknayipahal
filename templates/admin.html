@@ -1,0 +1,36 @@
+{{ define "admin" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+<section class="admin-panel">
+    <h2>ADD GALLERY IMAGE</h2>
+
+    <div class="add-image-form">
+        <h3>Enter Image Details</h3>
+        <form action="/admin/add" method="post">
+            <div class="form-group">
+                <label>Image URL:</label>
+                <input type="url" name="url" required placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" name="title" required placeholder="e.g. Education Camp">
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea name="description" required placeholder="Describe the image..."></textarea>
+            </div>
+            <button type="submit" class="btn">Add to Gallery</button>
+        </form>
+    </div>
+</section>
+
+<style>
+    .admin-panel { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .add-image-form { background: #f4f4f4; padding: 20px; border-radius: 8px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+</style>
+{{ end }}

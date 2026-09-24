@@ -9,10 +9,9 @@ RUN go mod tidy
 RUN go build -o ngo-site
 
 # Runtime stage
-FROM debian:bullseye-slim
+FROM ubuntu:22.04
 
 WORKDIR /app
-FROM ubuntu:22.04
 
 COPY --from=build /app/ngo-site .
 COPY --from=build /app/static ./static

@@ -10,7 +10,7 @@
 
 <header>
     <div class="logo">
-        <img src="/static/images/logo.png"
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png"
              alt="Ek Nayi Pahal Logo"
              height="60">
 
@@ -23,17 +23,18 @@
     <nav>
         <a href="/">Home</a>
         <a href="/about">About Us</a>
+        <a href="/gallery">Gallery</a>
         <a href="/contact">Contact Us</a>
     </nav>
 </header>
 
 <main>
-   {{ block "content" . }}{{ end }}
+   {{ template "content" . }}
 </main>
 
 <footer>
     <p>© 2026 Ek Nayi Pahal NGO. All rights reserved.</p>
-    <p>info@eknayipahal.org | +91-1234567890</p>
+    <p>info@eknayipahal.org | +91-1234567890 | <a href="/admin" style="color: inherit;">Admin</a></p>
 </footer>
 
 </body>

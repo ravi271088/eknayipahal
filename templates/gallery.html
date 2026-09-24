@@ -1,0 +1,47 @@
+{{ define "gallery" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+<section class="gallery">
+    <h2>Our Gallery</h2>
+    <p>Capturing the moments of change and hope we create together.</p>
+
+    <div class="cards">
+        {{ range .Images }}
+        <div class="card">
+            <img src="{{ .URL }}" alt="{{ .Title }}">
+            <h4>{{ .Title }}</h4>
+            <p>{{ .Description }}</p>
+        </div>
+        {{ end }}
+    </div>
+
+    <div class="pagination">
+        {{ if gt .CurrentPage 1 }}
+        <a href="/gallery?page={{ .PrevPage }}" class="btn">Previous</a>
+        {{ end }}
+
+        <span class="page-info">Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
+
+        {{ if lt .CurrentPage .TotalPages }}
+        <a href="/gallery?page={{ .NextPage }}" class="btn">Next</a>
+        {{ end }}
+    </div>
+</section>
+
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+    .page-info {
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+</style>
+{{ end }}
